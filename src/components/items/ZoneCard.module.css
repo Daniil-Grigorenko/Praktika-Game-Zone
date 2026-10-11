@@ -1,0 +1,35 @@
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.cover {
+  height: 120px;
+  display: grid;
+  place-items: center;
+  font-size: 3rem;
+  background: linear-gradient(135deg, #ece9ff, #dfe7ff);
+}
+.body { padding: 16px; display: flex; flex-direction: column; gap: 4px; }
+.body h3 { margin: 4px 0 0; }
+.badge {
+  align-self: flex-start;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #ece9ff;
+  color: var(--color-primary);
+}
+.platform, .meta { margin: 0; color: var(--color-muted); }
+.link {
+  margin-top: 12px;
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--color-primary);
+  color: #fff;
+  text-decoration: none;
+}

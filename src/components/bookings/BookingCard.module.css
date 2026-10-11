@@ -1,0 +1,30 @@
+.card {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+.past { opacity: 0.65; }
+.info h3 { margin: 0 0 8px; }
+.info p { margin: 2px 0; }
+.comment { color: var(--color-muted); }
+.actions { display: flex; flex-direction: column; gap: 8px; }
+.edit, .delete {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+.edit { background: var(--color-primary); color: #fff; border: none; }
+.delete { background: none; color: var(--color-danger); border: 1px solid var(--color-danger); }
+
+@media (max-width: 520px) {
+  .card { flex-direction: column; }
+  .actions { flex-direction: row; }
+  .actions > * { flex: 1; }
+}

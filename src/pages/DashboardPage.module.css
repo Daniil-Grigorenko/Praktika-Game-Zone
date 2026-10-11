@@ -1,0 +1,4 @@
+.hello { color: var(--color-muted); }
+.list { display: grid; gap: 12px; }
+.error { color: var(--color-danger); }
+.catalogLink { display: inline-block; margin-top: 24px; color: var(--color-primary); }

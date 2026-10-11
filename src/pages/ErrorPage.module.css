@@ -1,0 +1,12 @@
+.box { text-align: center; padding: 48px 16px; }
+.code { font-size: 4rem; font-weight: 800; margin: 0; color: var(--color-primary); }
+.box p { color: var(--color-muted); }
+.btn {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 12px 24px;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+}
