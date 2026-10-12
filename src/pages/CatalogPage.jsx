@@ -5,17 +5,20 @@ import ZoneFilters from '../components/items/ZoneFilters';
 import StatusMessage from '../components/common/StatusMessage';
 import Spinner from '../components/common/Spinner';
 import styles from './CatalogPage.module.css';
+import useDocumentTitle from '../hooks/useDocumentTitle';
+import { useToast } from '../context/ToastContext';
 
 const DEFAULT_FILTERS = { search: '', type: 'all', minCapacity: '', maxPrice: '' };
 
 export default function CatalogPage() {
+  useDocumentTitle('Каталог зон');
   const [zones, setZones] = useState([]);
-  const [status, setStatus] = useState('loading'); // loading | error | success
+  const [status, setStatus] = useState('loading');
   const [reloadKey, setReloadKey] = useState(0);
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
 
   useEffect(() => {
-    let ignore = false; // защита от обновления состояния после ухода со страницы
+    let ignore = false;
     setStatus('loading');
 
     getZones()

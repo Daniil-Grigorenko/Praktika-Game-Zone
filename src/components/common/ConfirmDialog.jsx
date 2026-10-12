@@ -5,11 +5,12 @@ export default function ConfirmDialog({
   title,
   text,
   confirmLabel = 'Подтвердить',
+  loadingLabel = 'Удаляем…',
   loading = false,
   onConfirm,
   onCancel,
 }) {
-  // закрытие по Escape; подписка снимается при размонтировании
+
   useEffect(() => {
     function onKey(e) {
       if (e.key === 'Escape' && !loading) onCancel();
@@ -34,7 +35,7 @@ export default function ConfirmDialog({
             Отмена
           </button>
           <button className={styles.confirm} onClick={onConfirm} disabled={loading}>
-            {loading ? 'Удаляем…' : confirmLabel}
+            {loading ? loadingLabel : confirmLabel}
           </button>
         </div>
       </div>

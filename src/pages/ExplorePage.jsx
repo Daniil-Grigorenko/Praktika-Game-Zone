@@ -4,12 +4,17 @@ import DealCard from '../components/items/DealCard';
 import StatusMessage from '../components/common/StatusMessage';
 import Spinner from '../components/common/Spinner';
 import styles from './ExplorePage.module.css';
+import useDocumentTitle from '../hooks/useDocumentTitle';
+import { useToast } from '../context/ToastContext';
 
 export default function ExplorePage() {
-  const [input, setInput] = useState('');   // то, что набрано в поле
-  const [query, setQuery] = useState('');   // то, что реально ищем (после отправки формы)
+
+    useDocumentTitle('Исследовать игры');
+
+  const [input, setInput] = useState('');
+  const [query, setQuery] = useState('');
   const [deals, setDeals] = useState([]);
-  const [status, setStatus] = useState('loading'); // loading | error | empty | success
+  const [status, setStatus] = useState('loading');
   const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
@@ -22,12 +27,10 @@ export default function ExplorePage() {
         setStatus(data.length === 0 ? 'empty' : 'success');
       })
       .catch((err) => {
-        // AbortError — это не настоящая ошибка, мы сами отменили запрос
         if (err.name === 'AbortError') return;
         setStatus('error');
       });
 
-    // при смене запроса или уходе со страницы старый запрос отменяется
     return () => controller.abort();
   }, [query, reloadKey]);
 

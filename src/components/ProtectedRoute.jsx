@@ -9,7 +9,7 @@ export default function ProtectedRoute() {
   if (loading) return <Spinner fullPage />;
 
   if (!user) {
-    // запоминаем, куда хотел попасть пользователь (путь + query + hash)
+
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
 

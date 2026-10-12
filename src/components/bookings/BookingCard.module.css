@@ -28,3 +28,9 @@
   .actions { flex-direction: row; }
   .actions > * { flex: 1; }
 }
+
+.card { transition: box-shadow 0.2s ease, border-color 0.2s ease; }
+.card:hover { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); border-color: var(--color-primary); }
+.edit:hover { filter: brightness(1.12); }
+.delete { transition: background-color 0.15s ease, color 0.15s ease; }
+.delete:hover { background: var(--color-danger); color: #fff; }

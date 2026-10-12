@@ -2,7 +2,7 @@
   text-align: center;
   padding: 48px 16px;
   margin-bottom: 32px;
-  background: linear-gradient(135deg, #ece9ff, #dfe7ff);
+  background: var(--gradient-soft);
   border-radius: 16px;
 }
 .hero h1 { margin-top: 0; font-size: 2rem; }
@@ -34,3 +34,10 @@
 @media (max-width: 520px) {
   .hero h1 { font-size: 1.5rem; }
 }
+
+.primary, .secondary { transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease; }
+.primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(91, 75, 219, 0.35); filter: brightness(1.08); }
+.secondary:hover { transform: translateY(-2px); background: var(--color-primary); color: #fff; }
+
+.step { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.step:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); }

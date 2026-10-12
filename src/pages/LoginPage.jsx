@@ -2,37 +2,46 @@ import { useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getAuthErrorMessage } from '../services/authService';
+import { validateLogin } from '../utils/validators';
+import useForm from '../hooks/useForm';
+import useDocumentTitle from '../hooks/useDocumentTitle';
+import FormField from '../components/common/FormField';
 import styles from './AuthPage.module.css';
+import { useToast } from '../context/ToastContext';
+
+const INITIAL = { email: '', password: '' };
 
 export default function LoginPage() {
+  useDocumentTitle('Вход');
+
   const { user, loading, login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // откуда пришёл пользователь (если его перекинул ProtectedRoute)
   const from = location.state?.from;
   const redirectTo = from ? `${from.pathname}${from.search}${from.hash}` : '/dashboard';
 
-  const [form, setForm] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
+  const { values, isValid, handleChange, handleBlur, touchAll, getError } =
+    useForm(INITIAL, validateLogin);
+
+  const [submitError, setSubmitError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  // уже авторизован — на страницу назначения
   if (!loading && user) return <Navigate to={redirectTo} replace />;
-
-  function handleChange(e) {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setError('');
+    setSubmitError('');
+    touchAll();
+    if (!isValid) return;
+
     setSubmitting(true);
     try {
-      await login(form);
+      await login({ email: values.email.trim(), password: values.password });
+      toast.success('Вы вошли в аккаунт');
       navigate(redirectTo, { replace: true });
     } catch (err) {
-      setError(getAuthErrorMessage(err));
+      setSubmitError(getAuthErrorMessage(err));
     } finally {
       setSubmitting(false);
     }
@@ -44,23 +53,28 @@ export default function LoginPage() {
       {from && <p className={styles.hint}>Войдите, чтобы открыть страницу {from.pathname}</p>}
 
       <form onSubmit={handleSubmit} noValidate>
-        <label className={styles.field}>
-          Email
-          <input type="email" name="email" value={form.email} onChange={handleChange} required />
-        </label>
-        <label className={styles.field}>
-          Пароль
-          <input type="password" name="password" value={form.password} onChange={handleChange} required />
-        </label>
+        <FormField
+          label="Email" name="email" type="email" autoComplete="email"
+          value={values.email} onChange={handleChange} onBlur={handleBlur}
+          error={getError('email')}
+        />
+        <FormField
+          label="Пароль" name="password" type="password" autoComplete="current-password"
+          value={values.password} onChange={handleChange} onBlur={handleBlur}
+          error={getError('password')}
+        />
 
-        {error && <p className={styles.error} role="alert">{error}</p>}
+        {submitError && <p className={styles.error} role="alert">{submitError}</p>}
 
         <button type="submit" className={styles.submit} disabled={submitting}>
           {submitting ? 'Входим…' : 'Войти'}
         </button>
       </form>
 
-      <p>Нет аккаунта? <Link to="/register">Зарегистрироваться</Link></p>
+      <p className={styles.links}>
+        <Link to="/forgot-password">Забыли пароль?</Link>
+      </p>
+      <p>Нет аккаунта? <Link to="/register" state={location.state}>Зарегистрироваться</Link></p>
     </section>
   );
 }

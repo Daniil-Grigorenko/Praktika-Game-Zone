@@ -4,6 +4,9 @@ import { useAuth } from '../context/AuthContext';
 import { getZones } from '../services/zonesService';
 import ZoneCard from '../components/items/ZoneCard';
 import styles from './HomePage.module.css';
+import useDocumentTitle from '../hooks/useDocumentTitle';
+import { useToast } from '../context/ToastContext';
+
 
 const STEPS = [
   { icon: '🔎', title: 'Выберите зону', text: 'Консоли или VR: посмотрите описание, игры и цену.' },
@@ -12,6 +15,7 @@ const STEPS = [
 ];
 
 export default function HomePage() {
+    useDocumentTitle('Главная');
   const { user } = useAuth();
   const [zones, setZones] = useState([]);
 
@@ -19,7 +23,7 @@ export default function HomePage() {
     let ignore = false;
     getZones()
       .then((data) => { if (!ignore) setZones(data.slice(0, 3)); })
-      .catch(() => {}); // блок необязательный: при ошибке он просто не показывается
+      .catch(() => {});
     return () => { ignore = true; };
   }, []);
 

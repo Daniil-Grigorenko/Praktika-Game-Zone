@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import {
   subscribeToUserBookings,
   deleteBooking,
   getBookingErrorMessage,
 } from '../services/bookingsService';
 import { isBookingPast } from '../utils/date';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 import BookingCard from '../components/bookings/BookingCard';
 import ConfirmDialog from '../components/common/ConfirmDialog';
 import StatusMessage from '../components/common/StatusMessage';
@@ -14,17 +16,19 @@ import Spinner from '../components/common/Spinner';
 import styles from './DashboardPage.module.css';
 
 export default function DashboardPage() {
+  useDocumentTitle('Личный кабинет');
+
   const { user } = useAuth();
+  const toast = useToast();
 
   const [bookings, setBookings] = useState([]);
-  const [status, setStatus] = useState('loading'); // loading | error | success
+  const [status, setStatus] = useState('loading');
   const [reloadKey, setReloadKey] = useState(0);
 
   const [toDelete, setToDelete] = useState(null);
   const [deleting, setDeleting] = useState(false);
-  const [deleteError, setDeleteError] = useState('');
 
-  // Подписка на брони пользователя в реальном времени
+
   useEffect(() => {
     setStatus('loading');
     const unsubscribe = subscribeToUserBookings(
@@ -32,7 +36,7 @@ export default function DashboardPage() {
       (list) => { setBookings(list); setStatus('success'); },
       () => setStatus('error')
     );
-    return unsubscribe; // отписка при выходе со страницы
+    return unsubscribe;
   }, [user.uid, reloadKey]);
 
   const { upcoming, past } = useMemo(() => {
@@ -46,14 +50,13 @@ export default function DashboardPage() {
 
   async function handleConfirmDelete() {
     setDeleting(true);
-    setDeleteError('');
     try {
       await deleteBooking(toDelete);
-      setToDelete(null); // список обновится сам благодаря подписке
+      toast.success('Бронь удалена');
     } catch (err) {
-      setDeleteError(getBookingErrorMessage(err));
-      setToDelete(null);
+      toast.error(getBookingErrorMessage(err));
     } finally {
+      setToDelete(null);
       setDeleting(false);
     }
   }
@@ -64,8 +67,6 @@ export default function DashboardPage() {
       <p className={styles.hello}>
         Привет, {user.displayName || user.email}! Здесь ваши бронирования.
       </p>
-
-      {deleteError && <p className={styles.error} role="alert">{deleteError}</p>}
 
       {status === 'loading' && <Spinner />}
 

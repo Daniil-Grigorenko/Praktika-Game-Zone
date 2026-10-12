@@ -13,7 +13,7 @@ const DURATIONS = Array.from({ length: MAX_DURATION }, (_, i) => i + 1);
 export default function BookingForm({
   zone,
   initialValues,
-  ownBooking = null, // при редактировании: своя бронь не считается «занятой»
+  ownBooking = null,
   submitLabel,
   submitting,
   submitError,
@@ -27,7 +27,6 @@ export default function BookingForm({
 
   const maxGuests = Math.min(zone.capacity, MAX_GUESTS);
 
-  // занятые часы на дату, не считая часов самой редактируемой брони
   function getBusy(date) {
     if (ownBooking && ownBooking.date === date) {
       const own = Array.from({ length: ownBooking.duration }, (_, i) => ownBooking.startHour + i);
@@ -41,7 +40,6 @@ export default function BookingForm({
     (v) => validateBooking(v, { busyHours: getBusy(v.date), maxGuests })
   );
 
-  // Загрузка занятых часов при смене даты
   useEffect(() => {
     if (!values.date) return;
     let ignore = false;

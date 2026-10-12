@@ -14,21 +14,18 @@ function slotData(booking, hour, ownerId, bookingId) {
   return { zoneId: booking.zoneId, date: booking.date, hour, ownerId, bookingId };
 }
 
-/** Занятые часы зоны на дату (публичный запрос к slots) */
 export async function getBookedHours(zoneId, date) {
   const q = query(slotsRef, where('zoneId', '==', zoneId), where('date', '==', date));
   const snap = await getDocs(q);
   return snap.docs.map((d) => d.data().hour);
 }
 
-/** Подписка на брони пользователя. Возвращает функцию отписки. */
 export function subscribeToUserBookings(uid, onData, onError) {
   const q = query(bookingsRef, where('ownerId', '==', uid));
   return onSnapshot(
     q,
     (snap) => {
       const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-      // сортировка на клиенте, чтобы не требовался составной индекс
       list.sort((a, b) => a.date.localeCompare(b.date) || a.startHour - b.startHour);
       onData(list);
     },
@@ -36,7 +33,6 @@ export function subscribeToUserBookings(uid, onData, onError) {
   );
 }
 
-/** Одна бронь. Чужая бронь → permission-denied (ловим на странице → 403) */
 export async function getBookingById(id) {
   const snap = await getDoc(doc(db, 'bookings', id));
   return snap.exists() ? { id: snap.id, ...snap.data() } : null;
@@ -71,7 +67,6 @@ export async function updateBooking(uid, old, data) {
   const batch = writeBatch(db);
   const bookingRef = doc(bookingsRef, old.id);
 
-  // зона не меняется, дата и время могут
   const oldIds = new Set(hoursOf(old.startHour, old.duration).map((h) => slotId(old.zoneId, old.date, h)));
   const newHours = hoursOf(data.startHour, data.duration);
   const newIds = new Set(newHours.map((h) => slotId(old.zoneId, data.date, h)));
@@ -89,7 +84,6 @@ export async function updateBooking(uid, old, data) {
     updatedAt: serverTimestamp(),
   });
 
-  // удаляем только то, что освободилось; создаём только то, что добавилось
   for (const id of oldIds) if (!newIds.has(id)) batch.delete(doc(slotsRef, id));
   for (const h of newHours) {
     const id = slotId(old.zoneId, data.date, h);

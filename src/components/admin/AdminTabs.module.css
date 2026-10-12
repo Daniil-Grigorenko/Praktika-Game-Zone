@@ -1,0 +1,9 @@
+.tabs { display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--color-border); }
+.tab, .active {
+  padding: 10px 16px;
+  text-decoration: none;
+  color: var(--color-muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.active { color: var(--color-primary); border-bottom-color: var(--color-primary); font-weight: 600; }

@@ -1,0 +1,25 @@
+.form {
+  max-width: 560px;
+  padding: 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.hint { margin: -10px 0 16px; color: var(--color-muted); font-size: 0.85rem; }
+.submitError { color: var(--color-danger); }
+.actions { display: flex; gap: 8px; margin-top: 8px; }
+.cancel, .submit {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.cancel { background: none; color: var(--color-text); border: 1px solid var(--color-border); }
+.submit { background: var(--color-primary); color: #fff; border: none; }
+.submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+@media (max-width: 520px) {
+  .row { grid-template-columns: 1fr; gap: 0; }
+}

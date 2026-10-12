@@ -6,10 +6,14 @@ import { validateRegister } from '../utils/validators';
 import useForm from '../hooks/useForm';
 import FormField from '../components/common/FormField';
 import styles from './AuthPage.module.css';
+import useDocumentTitle from '../hooks/useDocumentTitle';
+import { useToast } from '../context/ToastContext';
 
 const INITIAL = { displayName: '', email: '', password: '', confirmPassword: '' };
 
 export default function RegisterPage() {
+
+    useDocumentTitle('Регистрация');
   const { user, loading, register } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -38,6 +42,7 @@ export default function RegisterPage() {
         email: values.email.trim(),
         password: values.password,
       });
+      toast.success('Аккаунт создан. Добро пожаловать!');
       navigate(redirectTo, { replace: true });
     } catch (err) {
       setSubmitError(getAuthErrorMessage(err));

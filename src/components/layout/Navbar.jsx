@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
+import { useToast } from '../../context/ToastContext';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, isAdmin, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+  const toast = useToast();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
@@ -14,14 +18,18 @@ export default function Navbar() {
   async function handleLogout() {
     await logout();
     closeMenu();
+    toast.info('Вы вышли из аккаунта');
     navigate('/');
   }
 
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
-        <NavLink to="/" className={styles.logo} onClick={closeMenu}>
-          🎮 Super puper - GameZone
+        <NavLink to="/" className={styles.logo} onClick={closeMenu} aria-label="GameZone, на главную">
+          <span className={styles.logoIcon} aria-hidden="true">🎮</span>
+          <span className={styles.logoText}>
+            Game<span className={styles.logoAccent}>Zone</span>
+          </span>
         </NavLink>
 
         <button
@@ -30,7 +38,7 @@ export default function Navbar() {
           aria-expanded={open}
           aria-label="Открыть меню"
         >
-          ☰
+          {open ? '✕' : '☰'}
         </button>
 
         <nav className={`${styles.nav} ${open ? styles.navOpen : ''}`}>
@@ -41,7 +49,10 @@ export default function Navbar() {
             <>
               <NavLink to="/dashboard" className={linkClass} onClick={closeMenu}>Кабинет</NavLink>
               <NavLink to="/bookings/new" className={linkClass} onClick={closeMenu}>Забронировать</NavLink>
-              <button className={styles.logout} onClick={handleLogout}>Выйти</button>
+              <NavLink to="/profile" className={linkClass} onClick={closeMenu}>Профиль</NavLink>
+              {isAdmin && (
+                <NavLink to="/admin/zones" className={linkClass} onClick={closeMenu}>Админ</NavLink>
+              )}
             </>
           ) : (
             <>
@@ -49,6 +60,18 @@ export default function Navbar() {
               <NavLink to="/register" className={linkClass} onClick={closeMenu}>Регистрация</NavLink>
             </>
           )}
+
+          <button
+            type="button"
+            className={styles.themeBtn}
+            onClick={toggleTheme}
+            aria-label={theme === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему'}
+            title={theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
+          >
+            {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
+
+          {user && <button className={styles.logout} onClick={handleLogout}>Выйти</button>}
         </nav>
       </div>
     </header>

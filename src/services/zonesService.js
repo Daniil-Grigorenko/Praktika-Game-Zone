@@ -10,8 +10,12 @@ export async function getZones() {
     .filter((z) => z.isActive !== false);
 }
 
-/** Возвращает зону или null, если документа нет */
+
 export async function getZoneById(id) {
   const snap = await getDoc(doc(db, 'zones', id));
   return snap.exists() ? { id: snap.id, ...snap.data() } : null;
+}
+export async function getAllZones() {
+  const snap = await getDocs(zonesRef);
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }

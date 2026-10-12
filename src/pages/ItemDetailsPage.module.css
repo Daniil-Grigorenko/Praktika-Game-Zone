@@ -6,7 +6,7 @@
 .games li {
   padding: 4px 12px;
   border-radius: 999px;
-  background: #ece9ff;
+  background: var(--color-primary-soft);
   color: var(--color-primary);
 }
 
@@ -24,9 +24,9 @@
   cursor: pointer;
 }
 .slot:disabled { cursor: not-allowed; }
-.free { background: #e6f7ec; border-color: #9fdbb4; }
-.busy { background: #fde8e8; border-color: #f0a8a8; text-decoration: line-through; }
-.past { background: #eee; color: #999; }
+.free { background: var(--color-success-bg); border-color: var(--color-success-border); }
+.busy { background: var(--color-danger-bg); border-color: var(--color-danger-border); text-decoration: line-through; }
+.past { background: var(--color-disabled-bg); color: var(--color-disabled-text); }
 .selected {
   background: var(--color-primary);
   border-color: var(--color-primary);
@@ -36,9 +36,9 @@
 
 .legend { display: flex; align-items: center; gap: 8px; color: var(--color-muted); font-size: 0.875rem; flex-wrap: wrap; }
 .dotFree, .dotBusy, .dotPast { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
-.dotFree { background: #9fdbb4; }
-.dotBusy { background: #f0a8a8; margin-left: 12px; }
-.dotPast { background: #ccc; margin-left: 12px; }
+.dotFree { background: var(--color-success-border); }
+.dotBusy { background: var(--color-danger-border); margin-left: 12px; }
+.dotPast { background: var(--color-disabled-text); margin-left: 12px; }
 
 .bookBtn {
   display: block;
@@ -51,3 +51,7 @@
   text-decoration: none;
   font-weight: 600;
 }
+
+.free:hover:not(:disabled) { border-color: var(--color-primary); transform: translateY(-2px); }
+.bookBtn { transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease; }
+.bookBtn:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2); }

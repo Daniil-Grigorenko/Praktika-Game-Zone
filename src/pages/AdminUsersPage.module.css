@@ -1,0 +1,80 @@
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+.stats div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+.stats strong { font-size: 1.5rem; }
+.stats span { color: var(--color-muted); font-size: 0.85rem; }
+
+.filters { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin-bottom: 16px; }
+.filters input, .filters select {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.list { display: grid; gap: 12px; }
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+.avatar {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+}
+.info { flex: 1; min-width: 0; }
+.info h3 { margin: 0 0 2px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 1.05rem; }
+.email { margin: 0; word-break: break-all; }
+.meta { margin: 2px 0 0; color: var(--color-muted); font-size: 0.875rem; }
+
+.me, .admin, .owner, .blocked {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.me { background: var(--color-disabled-bg); color: var(--color-disabled-text); }
+.admin { background: var(--color-primary-soft); color: var(--color-primary); }
+.owner { background: var(--color-primary); color: #fff; }
+.blocked { background: var(--color-danger-bg); color: var(--color-danger); }
+
+.actions { display: flex; flex-direction: column; gap: 8px; }
+.actions button {
+  padding: 8px 14px;
+  background: none;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.actions .danger { color: var(--color-danger); border-color: var(--color-danger); }
+
+@media (max-width: 640px) {
+  .card { flex-wrap: wrap; }
+  .actions { flex-direction: row; flex-wrap: wrap; width: 100%; }
+  .filters { grid-template-columns: 1fr; }
+}
+
+.card { transition: box-shadow 0.2s ease, border-color 0.2s ease; }
+.card:hover { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); border-color: var(--color-primary); }
+.actions .danger:hover { background: var(--color-danger); color: #fff; }

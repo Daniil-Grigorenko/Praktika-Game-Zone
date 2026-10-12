@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { getZoneById } from '../services/zonesService';
 import { createBooking, getBookingErrorMessage } from '../services/bookingsService';
 import { todayString } from '../utils/date';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 import BookingForm from '../components/bookings/BookingForm';
 import StatusMessage from '../components/common/StatusMessage';
 import Spinner from '../components/common/Spinner';
@@ -11,7 +13,10 @@ import Spinner from '../components/common/Spinner';
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 export default function ItemCreatePage() {
+  useDocumentTitle('Новая бронь');
+
   const { user } = useAuth();
+  const toast = useToast();
   const navigate = useNavigate();
   const [params] = useSearchParams();
 
@@ -20,7 +25,7 @@ export default function ItemCreatePage() {
   const hourParam = params.get('hour');
 
   const [zone, setZone] = useState(null);
-  const [status, setStatus] = useState('loading'); // loading | error | notfound | success
+  const [status, setStatus] = useState('loading');
   const [reloadKey, setReloadKey] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
@@ -85,13 +90,18 @@ export default function ItemCreatePage() {
   async function handleSubmit(data) {
     setSubmitError('');
     setSubmitting(true);
+
     try {
       await createBooking(user.uid, { ...data, zoneId: zone.id, zoneName: zone.name });
-      navigate('/dashboard', { replace: true });
     } catch (err) {
+      console.error(err);
       setSubmitError(getBookingErrorMessage(err));
       setSubmitting(false);
+      return;
     }
+
+    toast.success('Бронь создана');
+    navigate('/dashboard', { replace: true });
   }
 
   return (

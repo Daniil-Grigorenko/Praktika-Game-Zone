@@ -1,7 +1,14 @@
 import { Link } from 'react-router-dom';
 import styles from './ErrorPage.module.css';
+import useDocumentTitle from '../hooks/useDocumentTitle';
+import { useToast } from '../context/ToastContext';
 
 export default function NotFoundPage() {
+
+useDocumentTitle('Главная');
+
+  const { user } = useAuth();
+
   return (
     <section className={styles.box}>
       <p className={styles.code}>404</p>

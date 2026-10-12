@@ -7,6 +7,9 @@ import { todayString } from '../utils/date';
 import StatusMessage from '../components/common/StatusMessage';
 import Spinner from '../components/common/Spinner';
 import styles from './ItemDetailsPage.module.css';
+import useDocumentTitle from '../hooks/useDocumentTitle';
+import ZoneImage from '../components/items/ZoneImage';
+import { useToast } from '../context/ToastContext';
 
 const HOURS = Array.from({ length: CLOSE_HOUR - OPEN_HOUR }, (_, i) => OPEN_HOUR + i);
 
@@ -14,7 +17,8 @@ export default function ItemDetailsPage() {
     const { id } = useParams();
 
     const [zone, setZone] = useState(null);
-    const [status, setStatus] = useState('loading'); // loading | error | notfound | success
+    useDocumentTitle(zone ? zone.name : 'Загрузка…');
+    const [status, setStatus] = useState('loading');
     const [reloadKey, setReloadKey] = useState(0);
 
     const [date, setDate] = useState(todayString());
@@ -39,7 +43,6 @@ export default function ItemDetailsPage() {
         return () => { ignore = true; };
     }, [id, reloadKey]);
 
-    // 2. Загрузка занятых часов при смене даты
     useEffect(() => {
         if (!date) return;
         let ignore = false;
@@ -90,6 +93,8 @@ export default function ItemDetailsPage() {
             <p className={styles.sub}>
                 {ZONE_TYPES[zone.type] ?? zone.type} · {zone.platform}
             </p>
+
+            <ZoneImage zone={zone} size="hero" />
 
             {zone.description && <p>{zone.description}</p>}
 

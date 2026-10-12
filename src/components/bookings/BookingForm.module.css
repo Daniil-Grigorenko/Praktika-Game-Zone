@@ -12,7 +12,7 @@
   gap: 2px;
   padding: 12px;
   margin-bottom: 16px;
-  background: #ece9ff;
+  background: var(--color-primary-soft);
   border-radius: 8px;
 }
 .zoneInfo span { color: var(--color-muted); font-size: 0.875rem; }
